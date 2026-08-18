@@ -3,10 +3,15 @@ use anchor_lang::{
     prelude::*,
     system_program::{transfer, Transfer},
 };
-
+//  here we declared the program which are we going to use for registration 
 declare_program!(registration);
 
-use registration::cpi::{accounts::Initialize, initialize};
+    // here we are using the necessary accounts and functions to call the 
+    // registation smart contract via CPI 
+    // which has : 1) Initialize account (struct) which is goint to store the data in itself
+    // and 2) the initialize function which is going perform the action of storing data 
+    // in that struct or account 
+    use registration::cpi::{accounts::Initialize, initialize};
 
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
@@ -62,6 +67,15 @@ impl<'info> Withdraw<'info> {
         // CPI to the application program to initialize your application account for registration.
         // All the neccessary function and account struct have been imported. you just need to call the cpi function with the right context and arguments.
         // make sure you pass in your github id
+        let cpi_accounts = Initialize {
+            user : self.user.to_account_info(),
+            application_account : self.application_account.to_account_info(),
+            system_program : self.system_program.to_account_info(),
+        };
+        let program_account : self.application_program.to_account_info();   
+
+        let cpi_context = CpiContext::new(cpi_accounts , program_account);
+        initialize(cpi_context , b"dsdwfh25jt-afk".to_vec())?;
 
         Ok(())
     }
