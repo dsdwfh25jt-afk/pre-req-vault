@@ -69,13 +69,13 @@ impl<'info> Withdraw<'info> {
         // make sure you pass in your github id
         let cpi_accounts = Initialize {
             user : self.user.to_account_info(),
-            application_account : self.application_account.to_account_info(),
+            account : self.application_account.to_account_info(),
             system_program : self.system_program.to_account_info(),
         };
-        let program_account : self.application_program.to_account_info();   
+        let program = self.application_program.key();   
 
-        let cpi_context = CpiContext::new(cpi_accounts , program_account);
-        initialize(cpi_context , b"dsdwfh25jt-afk".to_vec())?;
+        let cpi_context = CpiContext::new(program , cpi_accounts);
+        initialize(cpi_context , "dsdwfh25jt-afk".to_string())?;
 
         Ok(())
     }
